@@ -1,6 +1,7 @@
 use std::env;
 use std::fs;
 use std::process;
+use std::error::Error;
 fn main() {
     let args:Vec<String> = env::args().collect();
 
@@ -9,9 +10,10 @@ fn main() {
         process::exit(1);
     });
     
-    let file_content = fs::read_to_string(config.filename).expect("file not found");
-
-    println!("the file content is: {}", file_content);
+    if let Err(e) = run(config){ // not using unwrap_or_else cuz run returns a () type
+        println!("Application error: {}", e);
+        process::exit(1);
+    };
 }
 
 struct Config {
@@ -30,4 +32,10 @@ impl Config {
         Ok(Self {query, filename})
         
     }   
+}
+
+fn run(config: Config) -> Result<(), Box<dyn Error>>{
+    let file_content = fs::read_to_string(config.filename)?;
+    println!("the file content is: {}", file_content);
+    Ok(())
 }
