@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "greprc"
+name = "greprs"
 version = "0.1.0"
