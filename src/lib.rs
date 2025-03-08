@@ -2,8 +2,8 @@ use std::fs;
 use std::error::Error;
 
 pub struct Config {
-    query:String,
-    filename:String,
+    pub query:String,
+    pub filename:String,
 }
 
 impl Config {
@@ -23,4 +23,32 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
     let file_content = fs::read_to_string(config.filename)?;
     println!("the file content is: {}", file_content);
     Ok(())
+}
+
+fn search<'a>(query:&str, content:&'a str) -> Vec<&'a str> {
+
+    let mut res = Vec::new();
+    for line in content.lines() {
+        if line.contains(query) {
+            res.push(line);
+        }
+    }
+
+    res
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let query = "duct";
+        let content = "\nRust:\nsafe, fast, productive.\nPick three.";
+
+        assert_eq!(
+            vec!["safe, fast, productive."], 
+            search(query, content)
+        );
+    }
 }
