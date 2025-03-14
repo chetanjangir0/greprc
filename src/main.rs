@@ -5,10 +5,9 @@ use std::env;
 use std::process;
 use std::io::prelude::*;
 fn main() {
-    let args:Vec<String> = env::args().collect();
     let mut stderr = std::io::stderr();
 
-    let config = Config::new(&args).unwrap_or_else(|e| {
+    let config = Config::new(env::args()).unwrap_or_else(|e| {
         writeln!(
             &mut stderr, 
             "problem parsing arguments: {}", e
